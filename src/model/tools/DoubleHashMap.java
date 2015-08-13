@@ -75,7 +75,7 @@ public class DoubleHashMap {
 		File savedHashMaps = new File(file);
 	    try {
 	    	Properties props = new Properties();
-	        ObjectOutputStream oos = new ObjectOutputStream (new FileOutputStream(savedHashMaps));	      
+	        FileOutputStream oos = new FileOutputStream(savedHashMaps);	      
 			Iterator<Integer> iter = mapInt_to_String.keySet().iterator();
 			while(iter.hasNext()){
 				Integer key=iter.next();

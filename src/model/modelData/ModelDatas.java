@@ -162,7 +162,6 @@ public class ModelDatas {
 														+Resource.messages.getString("dataModelPath")+
 														"/"+Resource.messages.getString("hindexRule"));//hindexRule
 		defaultProps.store(out, "---No Comment---");
-		out.close();
 		
 		
 	}
