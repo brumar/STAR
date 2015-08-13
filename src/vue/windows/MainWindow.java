@@ -44,6 +44,7 @@ import controller.DataManager;
 import controller.ModelManager;
 import controller.RuleLinesManager;
 import controller.RunManager;
+import model.tools.Filesmethods;
 
 public class MainWindow extends JFrame implements ActionListener{
 	private JPanel Datacontainer = new JPanel();
@@ -113,7 +114,15 @@ public class MainWindow extends JFrame implements ActionListener{
 		
 		setLayout(new GridBagLayout());//the windows is managed by a gridbag layout, with a tabbedPane in last instance		
 		//System.out.println(Resource.runningMode);
-		loadContent();
+		
+		//removeFiles
+		Filesmethods.deleteFolder(Resource.path+'/'+Resource.messages.getString("dataRulesPath")+'/',"");
+		Filesmethods.deleteFolder(Resource.path+'/'+Resource.messages.getString("dataPbmPath")+'/',"");
+		Filesmethods.deleteFolder(Resource.path+'/'+Resource.messages.getString("dataModelPath")+'/',"");
+		loadContent(); // will fail but not dramatically fail, things get better when datas are loaded
+		messageWindowModel.setText("no file loaded");
+		messageWindowData.setText("no file loaded");
+		messageWindowRules.setText("no file loaded");
 		BuildTabPane();
 		
 		
@@ -137,6 +146,7 @@ public class MainWindow extends JFrame implements ActionListener{
 		System.out.println(Resource.path);
 		datas=null;
 		linesmanager=null;
+
 		datas= new DataManager();//T48
 		linesmanager= new RuleLinesManager(
 				datas.getRuleDatas().getAllRulelines(),
@@ -153,6 +163,7 @@ public class MainWindow extends JFrame implements ActionListener{
 		messageWindowData.setText(messageData=datas.getProblemmessage());
 		messageWindowRules.setText(messageRules=datas.getRulemessage());//
 		currentRulesList=datas.getRulesList();
+		
 		//loadingRules();
 
 		//
