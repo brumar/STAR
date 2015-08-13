@@ -54,7 +54,7 @@ public class Answer {
 			}	
 	}
 
-	private boolean hasProperty(String iDpropAnswer) {
+	public boolean hasProperty(String iDpropAnswer) {
 		return AnswerPropertiesID.contains(iDpropAnswer);
 	}
 
