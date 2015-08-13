@@ -257,6 +257,60 @@ private boolean error=false;
 	public ArrayList<Protocol> getProtocols() {
 		return protocols;
 	}
-
-
+	public void completePropertiesByNegation() {/*
+		private  HashMap<String,AnswerProperty> PropertiesAnswersMap=new HashMap<String,AnswerProperty>();
+		private  HashMap<String,ProblemProperty> PropertiesProblemMap=new HashMap<String,ProblemProperty>();
+		private  ArrayList<Protocol> protocols= new ArrayList<Protocol>();*/
+		
+		Set<String> propAnsKSet = PropertiesAnswersMap.keySet();//ProblemMap	
+		Set<String> propPbmKSet = PropertiesProblemMap.keySet();//ProblemMap
+		
+		Set<String> pbmsId = ProblemMap.keySet();
+		Iterator<String> itp = pbmsId.iterator();
+		while(itp.hasNext()){
+			Problem problem = ProblemMap.get(itp.next());
+			Iterator<String> idppbm = propPbmKSet.iterator();
+			while(idppbm.hasNext()){
+				String p = idppbm.next();
+				if(!problem.hasProperty(p)){
+					problem.addProperty("ABS_OF_"+p);
+				}
+			}			
+		}
+		
+		Set<String> ansId = AnswersMap.keySet();
+		Iterator<String> ita = ansId.iterator();
+		while(ita.hasNext()){
+			Answer answer = AnswersMap.get(ita.next());
+			Iterator<String> idpans = propAnsKSet.iterator();
+			while(idpans.hasNext()){
+				String a = idpans.next();
+				if(!answer.hasProperty(a)){
+					answer.addIdAnswerProperty("ABS_OF_"+a);
+				}
+			}			
+		}
+		
+		Iterator<String> idpans2 = propAnsKSet.iterator();
+		HashMap<String, AnswerProperty> PropertiesAnswersMapTemp = new HashMap<String,AnswerProperty>();
+		HashMap<String, ProblemProperty> PropertiesProblemMapTemp = new HashMap<String,ProblemProperty>();
+		
+		while(idpans2.hasNext()){
+			String ta = idpans2.next();
+			String a = "ABS_OF_"+ta;
+			AnswerProperty Ap=new AnswerProperty(a);
+			PropertiesAnswersMapTemp.put(a, Ap);
+		}
+		PropertiesAnswersMap.putAll(PropertiesAnswersMapTemp);
+		
+		Iterator<String> idppbm2 = propPbmKSet.iterator();
+		while(idppbm2.hasNext()){
+			String tp = idppbm2.next();
+			String p = "ABS_OF_"+tp;
+			ProblemProperty Pp=new ProblemProperty(p);
+			PropertiesProblemMapTemp.put(p, Pp);
+		}
+		PropertiesProblemMap.putAll(PropertiesProblemMapTemp);
+		print();
+	}
 }

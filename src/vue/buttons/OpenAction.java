@@ -16,6 +16,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFileChooser;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.SwingUtilities;
@@ -73,8 +74,13 @@ public class OpenAction extends AbstractAction {
 		        dir.setText(dirString);   
 	      if(fname.substring(fname.lastIndexOf('.')+1).equals(filterValue)){
 	    	  
-	    	  if(source.equals("opendatas")){    		  
-	    		  window.getdatas().dataPloading(dirString+'/'+fname);
+	    	  if(source.equals("opendatas")){
+	    		  int n = JOptionPane.showConfirmDialog(window,
+	    		    "Do you want to complete your properties with their opposite \"Absence of properties\" (highly recommended)",
+	    		    "generate new properties",
+	    		    JOptionPane.YES_NO_OPTION);
+	    		  boolean complete = n==JOptionPane.YES_OPTION;
+	    		  window.getdatas().dataPloading(dirString+'/'+fname,complete);
 	    		  String mess=window.getdatas().getProblemmessage();
 	    		  window.getmessageWindowDataLabel().setText(fname+ mess);
 	    	  }

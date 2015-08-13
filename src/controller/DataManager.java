@@ -92,7 +92,7 @@ public class DataManager {
 		return ruleMessage;
 	}
 
-	public void dataPloading(String f) {
+	public void dataPloading(String f, boolean completeProperties) {
 		boolean failUnzip=false;
 		try {
 			MyZip.unzip(new File(f), new File(Resource.path+'/'+Resource.messages.getString("dataPbmPath")));
@@ -102,6 +102,9 @@ public class DataManager {
 			failUnzip=true;
 			}
 		model.pbmData.ProblemDatas d=new model.pbmData.ProblemDatas();
+		if(completeProperties){
+			d.completePropertiesByNegation();
+		}
 		if (d.isError()||failUnzip){
 			problemMessage=Resource.messages.getString("dataPloadFail");
 		}
