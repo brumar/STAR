@@ -18,6 +18,9 @@ import model.tools.MyZip;
 public class DataManager {
 	
 	private ProblemDatas problemDatas;
+	private boolean  problemDatasAlreadyLoaded=false;
+
+
 	private RuleDatas ruleDatas;
 	private ArrayList<String> pbmPropList=new ArrayList<String>();
 	private ArrayList<String> rulesList=new ArrayList<String>();
@@ -51,18 +54,18 @@ public class DataManager {
 
 
 	public  DataManager(){
-
-		model.pbmData.ProblemDatas d=new model.pbmData.ProblemDatas();//load the csv present in the folder
-		if (d.isError()){
-			//problemDatas=null;
-			problemMessage=Resource.messages.getString("dataPloadFail");
-		}
-		else {
-			problemMessage=Resource.messages.getString("dataPloadSuccess");
-		}
-		System.out.println(problemMessage);
-		
-		RuleDatas r=new RuleDatas(d);
+		//if(problemDatas.isError())
+			model.pbmData.ProblemDatas d=new model.pbmData.ProblemDatas();//load the csv present in the folder
+			if (d.isError()){
+				//problemDatas=null;
+				problemMessage=Resource.messages.getString("dataPloadFail");
+			}
+			else {
+				problemMessage=Resource.messages.getString("dataPloadSuccess");
+			}
+			System.out.println(problemMessage);
+			this.problemDatas=d;
+		RuleDatas r=new RuleDatas(this.problemDatas);
 		if (r.isError()){
 			//ruleDatas=null;
 			ruleMessage=Resource.messages.getString("dataRloadFail");
@@ -75,7 +78,7 @@ public class DataManager {
 		this.pbmPropList=r.getpbmPropList();
 		this.rulesList=r.getrulesList();
 		this.ruleslines=r.getAllRulelines();
-		this.problemDatas=d;
+		
 	}
 
 	public ArrayList<String> getRulesList() {
@@ -92,7 +95,7 @@ public class DataManager {
 		return ruleMessage;
 	}
 
-	public void dataPloading(String f, boolean completeProperties) {
+	public void dataPloading(String f) {
 		boolean failUnzip=false;
 		try {
 			MyZip.unzip(new File(f), new File(Resource.path+'/'+Resource.messages.getString("dataPbmPath")));
@@ -102,9 +105,7 @@ public class DataManager {
 			failUnzip=true;
 			}
 		model.pbmData.ProblemDatas d=new model.pbmData.ProblemDatas();
-		if(completeProperties){
-			d.completePropertiesByNegation();
-		}
+
 		if (d.isError()||failUnzip){
 			problemMessage=Resource.messages.getString("dataPloadFail");
 		}
@@ -112,6 +113,7 @@ public class DataManager {
 			problemMessage=Resource.messages.getString("dataPloadSuccess");
 		}
 		problemDatas=d;
+		problemDatasAlreadyLoaded=true;
 		
 	}
 
@@ -184,7 +186,13 @@ public class DataManager {
 	}
 
 
+	public boolean isProblemDatasAlreadyLoaded() {
+		return problemDatasAlreadyLoaded;
+	}
 
+	public void setProblemDatasAlreadyLoaded(boolean problemDatasAlreadyLoaded) {
+		this.problemDatasAlreadyLoaded = problemDatasAlreadyLoaded;
+	}
 
 
 }

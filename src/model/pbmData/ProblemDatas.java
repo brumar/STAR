@@ -12,6 +12,7 @@ import resources.Resource;
 
 public class ProblemDatas {
 
+static boolean createOppositeProperties=false;
 private  HashMap<String,Problem> ProblemMap=new HashMap<String,Problem>();
 private  HashMap<String,Answer> AnswersMap=new HashMap<String,Answer>();
 private  HashMap<String,AnswerProperty> PropertiesAnswersMap=new HashMap<String,AnswerProperty>();
@@ -25,6 +26,9 @@ private boolean error=false;
 			BuildPropertiesProblemMap(Resource.path+"/"+Resource.messages.getString("dataPbmPath")+"/"+Resource.messages.getString("PPSheet"));//"datas/PbmDatas/PropertiesProblem.csv");
 			BuildPropertiesAnswersMap(Resource.path+'/'+Resource.messages.getString("dataPbmPath")+'/'+Resource.messages.getString("PASheet"));
 			BuildProtocols(Resource.path+'/'+Resource.messages.getString("dataPbmPath")+'/'+Resource.messages.getString("ProtocoSheet"));
+			if(createOppositeProperties){
+				completePropertiesByNegation();
+			}
 		} 
 		catch (Exception e) {
 			error=true;		
@@ -311,6 +315,12 @@ private boolean error=false;
 			PropertiesProblemMapTemp.put(p, Pp);
 		}
 		PropertiesProblemMap.putAll(PropertiesProblemMapTemp);
-		print();
+		//print();
+	}
+	public static boolean isCreateOppositeProperties() {
+		return createOppositeProperties;
+	}
+	public static void setCreateOppositeProperties(boolean createOppositeProperties) {
+		ProblemDatas.createOppositeProperties = createOppositeProperties;
 	}
 }

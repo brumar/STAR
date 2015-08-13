@@ -22,7 +22,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.SwingUtilities;
 
 import resources.Resource;
-
+import model.pbmData.ProblemDatas;
 import model.tools.Filesmethods;
 
 import controller.DataManager;
@@ -80,9 +80,11 @@ public class OpenAction extends AbstractAction {
 	    		    "generate new properties",
 	    		    JOptionPane.YES_NO_OPTION);
 	    		  boolean complete = n==JOptionPane.YES_OPTION;
-	    		  window.getdatas().dataPloading(dirString+'/'+fname,complete);
+	    		  ProblemDatas.setCreateOppositeProperties(complete);
+	    		  window.getdatas().dataPloading(dirString+'/'+fname);
 	    		  String mess=window.getdatas().getProblemmessage();
 	    		  window.getmessageWindowDataLabel().setText(fname+ mess);
+	    		  window.loadContent();
 	    	  }
 	    	  
 	    	  if(source.equals("openmodel")){
