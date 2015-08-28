@@ -19,6 +19,8 @@ private  HashMap<String,AnswerProperty> PropertiesAnswersMap=new HashMap<String,
 private  HashMap<String,ProblemProperty> PropertiesProblemMap=new HashMap<String,ProblemProperty>();
 private  ArrayList<Protocol> protocols= new ArrayList<Protocol>();
 private boolean error=false;
+private HashMap<String, HashMap<String, Integer>> occurenceMatrix;
+
 
 	public ProblemDatas(){
 		try{
@@ -26,6 +28,7 @@ private boolean error=false;
 			BuildPropertiesProblemMap(Resource.path+"/"+Resource.messages.getString("dataPbmPath")+"/"+Resource.messages.getString("PPSheet"));//"datas/PbmDatas/PropertiesProblem.csv");
 			BuildPropertiesAnswersMap(Resource.path+'/'+Resource.messages.getString("dataPbmPath")+'/'+Resource.messages.getString("PASheet"));
 			BuildProtocols(Resource.path+'/'+Resource.messages.getString("dataPbmPath")+'/'+Resource.messages.getString("ProtocoSheet"));
+			buildOccurencesMatrix();
 			if(createOppositeProperties){
 				completePropertiesByNegation();
 			}
@@ -116,11 +119,37 @@ private boolean error=false;
 				Answer a= new Answer(answer);//create an answer
 				Amap.put(answer,a);//put it in the answer map
 			}				
-		}		
+		}
+		
+
 	}
 
 
-
+	private void buildOccurencesMatrix(){
+		Set<String> problemIds = ProblemMap.keySet();
+		Set<String> answerIds = AnswersMap.keySet();
+		HashMap<String, HashMap<String, Integer>> mat = new HashMap<String,HashMap<String,Integer>>();//pbm->answer->number of occurences
+		
+		// Initialisation of the matrix
+		for (String pbm : problemIds) {
+			HashMap<String, Integer> occurences=new HashMap<String, Integer>();
+			for(String answer : answerIds){
+				occurences.put(answer, 0);
+			}
+			mat.put(pbm, occurences);					
+		}
+		
+		for (Protocol prot : protocols) {
+			HashMap<String, String> map = prot.getProbAnswerMap();
+		    for (String pbm : map.keySet()){
+		    	String ans=map.get(pbm);
+		    	Integer oldVal = mat.get(pbm).get(ans);
+		    	mat.get(pbm).replace(ans, oldVal+1);
+		    }
+		}
+		this.occurenceMatrix=mat;
+		
+	}
 
 	private  void BuildPropertiesAnswersMap(String path)throws FileNotFoundException, IOException {
 		ArrayList<String> headers=new ArrayList<String>();
@@ -323,4 +352,7 @@ private boolean error=false;
 	public static void setCreateOppositeProperties(boolean createOppositeProperties) {
 		ProblemDatas.createOppositeProperties = createOppositeProperties;
 	}
+	public HashMap<String, HashMap<String, Integer>> getOccurenceMatrix() {
+	return occurenceMatrix;
+}
 }

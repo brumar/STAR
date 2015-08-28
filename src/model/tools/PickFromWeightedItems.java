@@ -2,6 +2,7 @@ package model.tools;
 
 import java.awt.List;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import model.tools.WeightedItem;
@@ -10,21 +11,29 @@ import model.tools.WeightedItem;
 	public class   PickFromWeightedItems
 	{
 		    private  String value;
-		    private ArrayList<ArrayList<WeightedItem<String>>> weightMatrice;
-		    public    PickFromWeightedItems(ArrayList<ArrayList<WeightedItem<String>>> weightMatrice){
-		    	this.weightMatrice=weightMatrice;
+		    private HashMap<String,ArrayList<WeightedItem<String>>> weightMatrice;
+		    public    PickFromWeightedItems(HashMap<String, HashMap<String, Integer>> occurMatrice){
+		    	HashMap<String,ArrayList<WeightedItem<String>>> finalMatrix=new HashMap<String,ArrayList<WeightedItem<String>>>();
+		    	for(String pbm:occurMatrice.keySet()){
+		    		ArrayList<WeightedItem<String>> pbmList=new ArrayList<WeightedItem<String>>();
+		    		for(String ans:occurMatrice.get(pbm).keySet()){
+		    			Integer val = occurMatrice.get(pbm).get(ans);
+		    			WeightedItem<String> current = new WeightedItem<String>(val, ans);
+		    			pbmList.add(current);
+		    		}
+		    		finalMatrix.put(pbm,pbmList);
+		    	} 
+		    	this.weightMatrice=finalMatrix;
 		    }
 		    
-		public ArrayList<String> PickFromWeightedMatrice(){
-			Iterator<ArrayList<WeightedItem<String>>> it = this.weightMatrice.iterator();
-			ArrayList<String> selectionVector = new ArrayList<String>();
-			while(it.hasNext()){
-				ArrayList<WeightedItem<String>> vector = it.next();
+		public HashMap<String,String> PickFromWeightedMatrice(){
+			HashMap<String,String> selectionVector = new HashMap<String,String>();
+			for(String pbm:this.weightMatrice.keySet()){
+				ArrayList<WeightedItem<String>> vector = this.weightMatrice.get(pbm);
 				String s = PickFromWeightedVector(vector);
-				selectionVector.add(s);
+				selectionVector.put(pbm,s);
 			}
 			return selectionVector;
-			
 		}
 		
 		private String PickFromWeightedVector(ArrayList<WeightedItem<String>> listItems){	    	
@@ -51,30 +60,7 @@ import model.tools.WeightedItem;
 			String myRandomItem = listItems.get(randomIndex).getItem();
 			return myRandomItem;
 		}
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
 		
-		System.out.println("test");
-		WeightedItem<String> wi = new WeightedItem<String>(5, "un");
-		WeightedItem<String> w2 = new WeightedItem<String>(1, "deux");
-		WeightedItem<String> w3 = new WeightedItem<String>(5, "trois");
-		
-		ArrayList<WeightedItem<String>> listItems = new ArrayList<WeightedItem<String>>();
-		listItems.add(wi);
-		listItems.add(w2);
-		listItems.add(w3);
-		ArrayList<WeightedItem<String>> l2 = new ArrayList<WeightedItem<String>>(listItems);
-		ArrayList<WeightedItem<String>> l3 = new ArrayList<WeightedItem<String>>(listItems);
-		ArrayList<ArrayList<WeightedItem<String>>> matrice = new ArrayList<ArrayList<WeightedItem<String>>>();
-		matrice.add(listItems);
-		matrice.add(l2);
-		matrice.add(l3);
-		PickFromWeightedItems selector = new PickFromWeightedItems(matrice);
-		ArrayList<String> selection = selector.PickFromWeightedMatrice();
-		System.out.println(selection);
-	}
 	public String getValue() {
 		return value;
 	}
