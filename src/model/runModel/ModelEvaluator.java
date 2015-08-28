@@ -35,7 +35,8 @@ public class ModelEvaluator {
 				}	
 			}
 			if(compter==bs.length){
-				SpecialNotification[i]="FULL";
+				SpecialNotification[i]="FULL"; 
+				// these special notifications avoid the 1-bit cost to indicate if the model is right or wrong
 			}
 			else if(compter==0){
 				SpecialNotification[i]="VOID";
