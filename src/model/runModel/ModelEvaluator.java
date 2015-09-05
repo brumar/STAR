@@ -1,10 +1,12 @@
 package model.runModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import model.pbmData.ProblemDatas;
 import model.pbmData.Protocol;
+import resources.Resource;
 
 public class ModelEvaluator {
 	private ArrayList<boolean[]> ListofVector;
@@ -13,15 +15,21 @@ public class ModelEvaluator {
 	private int length;
 	private ProblemDatas problemDatas;
 	private Integer[] CompatibilitiesMaxNumber;
+	private HashMap<String, Integer> problemIdToIndex;
+	private boolean normalize;
+	private double normalizeCoeff;
 	
-	public ModelEvaluator(ProblemDatas pbmDatas,ArrayList<boolean[]> arrayList) {
+	public ModelEvaluator(ProblemDatas pbmDatas,ArrayList<boolean[]> arrayList, HashMap<String, Integer> pbmIdToIndex) {
 		ListofVector=arrayList;
+		problemIdToIndex=pbmIdToIndex;
 		length=arrayList.size();
 		CompatibilitiesNumber=new Integer[length];
 		CompatibilitiesMaxNumber=new Integer[length];
 		SpecialNotification=new String[length];
 		countCompabilities(ListofVector);
 		problemDatas=pbmDatas;
+		this.normalize=Resource.messages.getString("normalizeEvaluation").equals("yes");
+		this.normalizeCoeff=Double.parseDouble(Resource.messages.getString("coefficientNormalisation"));
 	}
 
 	private void countCompabilities(ArrayList<boolean[]> listofVector2) {		
@@ -51,30 +59,30 @@ public class ModelEvaluator {
 
 	public double evaluateProtocol(Protocol pro) {
 		Iterator<String> it = pro.getProbAnswerMap().keySet().iterator();
-		int indexPbm = 0;
 		double descriptionLength=0;
 		while(it.hasNext()){
 			String ProblemId = it.next();
+			int indexPbm=problemIdToIndex.get(ProblemId);
 			ArrayList<String> answers = problemDatas.getProblemMap().get(ProblemId).getAnswersID();
 			int indexAnswer = answers.indexOf(pro.getProbAnswerMap().get(ProblemId));
-			descriptionLength+=evaluate(indexPbm,indexAnswer);
-			indexPbm++;
+			descriptionLength+=evaluate(indexPbm,indexAnswer); // WHAAAAAAAAAT
 		}
 		return descriptionLength;
 	}
 
 	private double evaluate(int indexPbm,int indexAnswer) {
 		double localdescriptionLength=0;
+		double maxComp = (double)CompatibilitiesMaxNumber[indexPbm];
 		if(SpecialNotification[indexPbm].equals("FULL")||SpecialNotification[indexPbm].equals("VOID")){
-			localdescriptionLength = Math.log((double)CompatibilitiesMaxNumber[indexPbm]);
+			localdescriptionLength = Math.log(maxComp);
 		}
 		else{
+			double comp = (double)CompatibilitiesNumber[indexPbm];
 			if(ListofVector.get(indexPbm)[indexAnswer]){
-				localdescriptionLength=1+Math.log((double)CompatibilitiesNumber[indexPbm]);
+				localdescriptionLength=costProfileIndication(comp,maxComp,true)+Math.log(comp);
 			}
 			else{
-				localdescriptionLength=1+Math.log(
-						(double)CompatibilitiesMaxNumber[indexPbm]-(double)CompatibilitiesNumber[indexPbm]);
+				localdescriptionLength=costProfileIndication(comp,maxComp,false)+Math.log(maxComp-comp);
 			}
 		
 		}
@@ -82,11 +90,28 @@ public class ModelEvaluator {
 		return localdescriptionLength;
 	}
 
-	public double descriptionLengthNoModel() {
+	private double costProfileIndication(double comp, double maxComp, boolean success) {
+		if(!normalize){
+			return 1;
+		}
+		double pfail = (maxComp-comp)/(maxComp*(normalizeCoeff));
+		double psuccess = 1-pfail;
+		if(success){
+			return(Math.log(1/psuccess));
+		}
+		else{
+			return(Math.log(1/pfail));
+		}
+	}
+
+	public double descriptionLengthNoModel(Protocol pro) {
+		Iterator<String> it = pro.getProbAnswerMap().keySet().iterator();
 		double description=0;
-		for(int i=0;i<length;i++){
-			description+=Math.log(CompatibilitiesMaxNumber[i]);
-		}	
+		while(it.hasNext()){
+			String ProblemId = it.next();
+			int indexPbm=problemIdToIndex.get(ProblemId);
+			description+=Math.log((double)CompatibilitiesMaxNumber[indexPbm]);
+		}
 		return description;
 	}
 

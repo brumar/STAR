@@ -6,6 +6,8 @@ import java.util.Iterator;
 import model.pbmData.Protocol;
 import model.tools.DoubleHashMap;
 
+import resources.Resource;
+
 public class EvaluationOutput {
 
 	private ArrayList<Integer> possList;
@@ -15,6 +17,8 @@ public class EvaluationOutput {
 	private DoubleHashMap indexRule;
 	private String defaultMessage;
 	private double pvalue;
+
+	
 	public EvaluationOutput(ArrayList<Integer> possList, Protocol pro, double modeldescriptionLength,
 			double withoutModeldescriptionLength, DoubleHashMap indexRule) {
 		this.possList=possList;
@@ -23,6 +27,12 @@ public class EvaluationOutput {
 		this.withoutModeldescriptionLength=withoutModeldescriptionLength;
 		this.indexRule=indexRule;
 		this.defaultMessage="ok";
+
+		/*
+		 * 
+		 * normalizeEvaluation=yes
+coefficientNormalisation=2
+		 */
 		// TODO Auto-generated constructor stub
 	}
 	
