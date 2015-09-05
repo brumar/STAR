@@ -83,9 +83,11 @@ public class DoubleHashMap {
 				props.setProperty(key.toString(), value);
 			}
 			props.store(oos,"comment");
+			oos.close();
 	    } catch (Exception e) {
 	        // Catch exceptions
 	    }
+	    
 	}
 
 
