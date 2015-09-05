@@ -53,7 +53,7 @@ coefficientNormalisation=2
 		}
 		mess+="\nwith a description length of : "+(Math.floor(modeldescriptionLength*100)/100)+" bits";
 		mess+="\n( description length without any model : "+(Math.floor(withoutModeldescriptionLength*100)/100)+"  bits)";
-		mess+="\n+pvalue : "+pvalue;
+		mess+="\n pvalue : "+pvalue;
 		return mess;
 	}
 
