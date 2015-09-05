@@ -23,6 +23,9 @@ public class ModelBuilder {
 	private DoubleHashMap indexRule;
 	private boolean[][] matrixPropertiesModel;
 	ArrayList<boolean[]> listAnswersToPbmVector; //represents the answers accepted by the Pbm
+	private HashMap<String, Integer> problemIdToIndex=new HashMap<String, Integer>();
+
+
 	static int width;
 	static int height;
 
@@ -30,6 +33,7 @@ public class ModelBuilder {
 		possibility=poss;
 		ruleMap=ruleMap2;
 		indexRule=iRule;
+		//pro.getProbAnswerMap().keySet().iterator();
 		listAnswersToPbmVector=new ArrayList<boolean[]>();// TODO Auto-generated constructor stub
 		
 	}
@@ -97,8 +101,11 @@ public class ModelBuilder {
 		private DoubleHashMap indexPropertyAnswer
 		*/
 		Iterator<String> it = problemDatas.getProblemMap().keySet().iterator();	
-		while (it.hasNext()){
+		int indexPbm=0;
+		while (it.hasNext()){		
 			String pbm = it.next();
+			problemIdToIndex.put(pbm,indexPbm);
+			indexPbm++;
 			ArrayList<String> problemProperties = problemDatas.getProblemMap().get(pbm).getProblemPropertiesID();
 			ArrayList<String> answers = problemDatas.getProblemMap().get(pbm).getAnswersID();
 			boolean[] answersVector=new boolean[answers.size()];
@@ -136,5 +143,8 @@ public class ModelBuilder {
 
 	public ArrayList<boolean[]> getListAnswersToPbmVector() {
 		return listAnswersToPbmVector;
+	}
+	public HashMap<String, Integer> getProblemIdToIndex() {
+		return problemIdToIndex;
 	}
 }
