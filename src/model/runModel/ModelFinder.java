@@ -12,6 +12,8 @@ import model.rulesData.Rule;
 import model.rulesData.RuleDatas;
 import model.tools.DoubleHashMap;
 import model.tools.PickFromWeightedItems;
+import resources.Resource;
+
 import java.util.Collections;
 
 public class ModelFinder {
@@ -61,17 +63,25 @@ public class ModelFinder {
 
 	private void evaluation(ArrayList<Protocol> protocols) {
 		Iterator<Protocol> it2 = protocols.iterator();
+		ArrayList<EvaluationOutput> outputs=new ArrayList<EvaluationOutput>();
+		int index=0;
 		while(it2.hasNext()){
-			Protocol pro = it2.next();
-			ArrayList<EvaluationOutput> outputs=new ArrayList<EvaluationOutput>();
-			outputs.add( singleEvaluation(pro));
-			for (EvaluationOutput ev:outputs){
-				messages.add(ev.writeMessage());
+			index++;
+			try{
+			Protocol pro = it2.next();		
+			outputs.add( singleEvaluation(pro,"compareWithPermutationValues"));
 			}
-		}	
+			 catch (Exception e1) {
+				System.out.println( e1.getMessage());
+				System.out.println("fail with protocol"+index);
+			}
+		}
+		for (EvaluationOutput ev:outputs){
+			messages.add(ev.writeMessage());
+		}
 	}
 
-	private EvaluationOutput singleEvaluation(Protocol pro) {
+	private EvaluationOutput singleEvaluation(Protocol pro, String action) {
 		Iterator<HashSet<Integer>> it = ListofPoss.iterator();
 		double minimum=100;
 		EvaluationOutput output = new EvaluationOutput("error");
@@ -84,8 +94,8 @@ public class ModelFinder {
 			model=new ModelBuilder(possList,ruleMap,indexRule);
 			model.BuildMatrixModel();
 			model.BuilBehavioralVectors(problemDatas,ruleDatas,"interdiction");
-			modelEvaluation=new ModelEvaluator(problemDatas,model.getListAnswersToPbmVector());
-			 WithoutModeldescriptionLength=modelEvaluation.descriptionLengthNoModel();			
+			modelEvaluation=new ModelEvaluator(problemDatas,model.getListAnswersToPbmVector(),model.getProblemIdToIndex());
+			 WithoutModeldescriptionLength=modelEvaluation.descriptionLengthNoModel(pro);			
 			double WithModelLocaldescriptionLength=modelEvaluation.evaluateProtocol(pro);
 		//	System.out.println("local description : "+WithModelLocaldescriptionLength);
 			 ModeldescriptionLength=WithModelLocaldescriptionLength+ParametersdescriptionLength;
@@ -96,8 +106,10 @@ public class ModelFinder {
 				output = new EvaluationOutput(possList,pro,ModeldescriptionLength,WithoutModeldescriptionLength,indexRule);
 			}
 		}
-		double p = this.getPvalue(permutationValues, ModeldescriptionLength-WithoutModeldescriptionLength, 0, permutationValues.size());
-		output.setPermutationPvalue(p);
+		if(action=="compareWithPermutationValues"){
+			double p = this.getPvalue(permutationValues, output.getCompression(), 0, permutationValues.size());
+			output.setPermutationPvalue(p);
+		}
 		return output;
 	}
 
@@ -111,10 +123,11 @@ public class ModelFinder {
 
 	private void preparePermutationTest() {
 		randomSelector=new PickFromWeightedItems(problemDatas.getOccurenceMatrix());
-		for (int i = 0; i < 5000; i++){
+		int nperm = Integer.parseInt(Resource.messages.getString("Npermutations"));
+		for (int i = 0; i < nperm; i++){
 			HashMap<String, String> selection = randomSelector.PickFromWeightedMatrice();
 			Protocol p=new Protocol(i,selection);
-			EvaluationOutput output = singleEvaluation(p);
+			EvaluationOutput output = singleEvaluation(p,"storePermutationValues");
 			if(!output.writeMessage().equals("error")){
 				this.permutationValues.add(output.getCompression());
 			}
@@ -124,8 +137,8 @@ public class ModelFinder {
 	}
 	
 	public double getPvalue( ArrayList<Double> permutationValues,double i, Integer low,Integer high){
-	    if (high-low==1){
-	        return high/permutationValues.size();
+	    if (high-low<2){
+	        return (double)high/(double)permutationValues.size();
 	    }
 	    int mid = low + ((high - low) >> 1);
 	    if (permutationValues.get(mid) > i)
