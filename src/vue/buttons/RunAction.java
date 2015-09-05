@@ -8,6 +8,7 @@ import java.util.Iterator;
 import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
+import model.tools.Writers;
 
 import resources.Resource;
 
@@ -38,13 +39,9 @@ public class RunAction extends AbstractAction {
 			 String runmessage=window.getRunmanager().getRunmessage();
 			 if(!runmessage.equals("error")){
 				 ArrayList<String> messages=window.getRunmanager().getSelectionMessages();
-				 Iterator<String> it = messages.iterator();
-				 String selectionmessage="";
-				 while(it.hasNext()){
-					 selectionmessage+=it.next()+"\n";
-				 }
-				 
-				 window.getMessagesSelectionArea().setText(selectionmessage);	
+				 String outputFile = Resource.messages.getString("outputFile");			 
+				 Writers.createTextFileWithLines(messages,outputFile);			 
+				 window.getMessagesSelectionArea().setText("done, check "+outputFile);	
 			}
 			 window.getmessageWindowRunLabel().setText(runmessage);
 			 

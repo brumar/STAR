@@ -1,9 +1,13 @@
 package model.tools;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -51,5 +55,22 @@ public class Writers {
 			csvwriter.endRecord();
 		}
 		csvwriter.close();
+	}
+	public static void createTextFileWithLines(ArrayList<String> messages, String filedest){
+		PrintWriter writer = null;
+		try {
+			writer = new PrintWriter(filedest, "UTF-8");
+			for(String m:messages){
+				writer.println(m);
+				writer.println(m);
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		writer.close();		
 	}
 }
