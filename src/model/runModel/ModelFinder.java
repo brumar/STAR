@@ -13,6 +13,7 @@ import model.rulesData.RuleDatas;
 import model.tools.DoubleHashMap;
 import model.tools.PickFromWeightedItems;
 import resources.Resource;
+import model.tools.Writers;
 
 import java.util.Collections;
 
@@ -133,7 +134,11 @@ public class ModelFinder {
 			}
 			
 		}
-		Collections.sort(permutationValues);		
+		Collections.sort(permutationValues);
+		if(Resource.messages.getString("storePermutationValues").equals("yes")){
+			String fileDest = Resource.messages.getString("outputPermutationValues");
+			Writers.createTextFileWithNumbers(permutationValues, fileDest);
+		}
 	}
 	
 	public double getPvalue( ArrayList<Double> permutationValues,double i, Integer low,Integer high){
