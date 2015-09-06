@@ -36,14 +36,17 @@ public class RadioAction extends AbstractAction {
 		String line=j.getParent().getName();
 		String property=((JLabel)j.getParent().getComponent(0)).getText();
 		String panelLegend=j.getParent().getParent().getName();
-		System.out.println(panelLegend);
+//		System.out.println(panelLegend);
 		String selectedRule = (String) window.getSelectrulename().getSelectedItem();
-		
+		boolean depend = legend.equals("it depends (click to edit dependances)");
 
 		boolean change=window.getLinesmanager().changeLine(selectedRule,legend,line,panelLegend,property);
-		if(change){new SelectRuleAction(window,"").updateWindow(window.getLinesmanager().getLines(selectedRule),selectedRule);}
+		if(change||depend){
+			new SelectRuleAction(window,"").updateWindow(window.getLinesmanager().getLines(selectedRule),selectedRule);
+			}
 		
-		if(legend.equals("it depends (click to edit dependances)")){//visibility is changed only when proPbmPane is clicked
+		
+		if(depend){//visibility is changed only when proPbmPane is clicked
 			changeVisibility(line);
 			//System.out.println("affichage de la ligne " +line);
 		}
