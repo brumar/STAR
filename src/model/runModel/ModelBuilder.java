@@ -114,11 +114,11 @@ public class ModelBuilder {
 			while(it2.hasNext()){
 				ArrayList<String> answerProperties = problemDatas.getAnswersMap().get(it2.next()).getAnswerPropertiesID();
 				Iterator<String> it3 = problemProperties.iterator();
-				Iterator<String> it4 = answerProperties.iterator();
 				ArrayList<Boolean> listBool=new ArrayList<Boolean>();
 				while(it3.hasNext()){
 					String propertyPbm = it3.next();
 					int j=ruleDatas.getIndexPropertyPbm().find(propertyPbm);
+					Iterator<String> it4 = answerProperties.iterator();
 					while(it4.hasNext()){					
 						int i=ruleDatas.getIndexPropertyAnswer().find(it4.next());
 						//System.out.println(" i : "+ i + " j : "+j);
