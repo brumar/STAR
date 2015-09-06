@@ -56,6 +56,7 @@ public class LoadModelUser extends AbstractAction {
 			else {window.handleException(e1);}
 		}
 		window.loadContent();
+		window.setModelUpdated(true);
 		window.revalidate();
 	     window.repaint();
 
