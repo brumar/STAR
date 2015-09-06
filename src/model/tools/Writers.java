@@ -73,4 +73,13 @@ public class Writers {
 		}
 		writer.close();		
 	}
+	public static void createTextFileWithNumbers(ArrayList<Double> permutationValues, String fileDest) {
+		ArrayList<String> messages = new ArrayList<String>();
+		for(Double p:permutationValues){
+			messages.add(Double.toString(p));
+		}
+		createTextFileWithLines(messages,fileDest);
+		// TODO Auto-generated method stub
+		
+	}
 }
