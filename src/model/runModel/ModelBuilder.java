@@ -51,13 +51,12 @@ public class ModelBuilder {
 	}
 	
 	private void PerformIntegration(String operator, ArrayList<boolean[][]> l) {
+		// each rule has its own matrix, this function merge them together
 		if(l.size()==0){
 			boolean[][] b = new boolean[height][width];
-			if(operator.equals("and")){
-				for(int i=0;i<height;i++){
-					for(int j=0;j<width;j++){
-						b[i][j]=true;
-					}
+			for(int i=0;i<height;i++){
+				for(int j=0;j<width;j++){
+					b[i][j]=operator.equals("and");
 				}
 			}
 			l.add(b);
@@ -120,9 +119,20 @@ public class ModelBuilder {
 					int j=ruleDatas.getIndexPropertyPbm().find(propertyPbm);
 					Iterator<String> it4 = answerProperties.iterator();
 					while(it4.hasNext()){					
-						int i=ruleDatas.getIndexPropertyAnswer().find(it4.next());
+						String propertyAnswer = it4.next();
+						int i=ruleDatas.getIndexPropertyAnswer().find(propertyAnswer);
 						//System.out.println(" i : "+ i + " j : "+j);
-						listBool.add(matrixPropertiesModel[i][j]);
+						boolean autorisation = matrixPropertiesModel[i][j];
+						listBool.add(autorisation);
+						/*
+						if(!autorisation){//debug purpose
+							String message = "answerProp ("+propertyAnswer+") forbidden on problemProp ("+propertyPbm+")";
+							message+=" current Rules : ";
+							for(Integer p:possibility){
+								message+= indexRule.find(p+1)+", ";
+							}
+							System.out.println(message);
+						}*/
 					}
 				}
 				Iterator<Boolean> it5 = listBool.iterator();
