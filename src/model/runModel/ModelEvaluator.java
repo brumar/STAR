@@ -58,7 +58,7 @@ public class ModelEvaluator {
 	}
 
 	public double evaluateProtocol(Protocol pro) {
-		printSumCompat();
+		//printSumCompat();
 		Iterator<String> it = pro.getProbAnswerMap().keySet().iterator();
 		double descriptionLength=0;
 		while(it.hasNext()){
