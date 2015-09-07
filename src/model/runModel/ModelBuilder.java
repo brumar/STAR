@@ -78,11 +78,26 @@ public class ModelBuilder {
 	public boolean[][] buildPropertiesBehaviorMatrix(Integer i) {
 		
 		String id=indexRule.find(i+1);
-		boolean[][] matrix=ruleMap.get(id).getCondition().getMatrix();
+		boolean[][] matrix=copyMatrix(ruleMap.get(id).getCondition().getMatrix());
 		height=matrix.length;
 		width=matrix[0].length;
+		//printUniqueRuleMatrix(matrix,i);
 		return matrix;
 	}
+
+
+	private boolean[][] copyMatrix(boolean[][] matrix) {
+		int h = matrix.length;
+		int w = matrix[0].length;
+		boolean[][] m = new boolean[h][w];
+		for(int i=0;i<h;i++){
+			for(int j=0;j< w;j++){
+				m[i][j]=matrix[i][j];
+			}
+		}
+		return m;
+	}
+
 	public boolean[][] getMatrixPropertiesModel() {
 		return matrixPropertiesModel;
 	}
@@ -148,7 +163,53 @@ public class ModelBuilder {
 				indexAnswer++;
 			}			
 			listAnswersToPbmVector.add(answersVector);
-		}	
+		}
+		//printStuff();
+	}
+
+	private void printStuff() {
+		int sumVec = 0;
+		int total=0;
+		int sumMat = 0;
+		int totalMat=0;
+		for( boolean[] vector:listAnswersToPbmVector){
+			for(boolean b:vector){
+				if(b){
+					sumVec+=1;
+				}
+				total+=1;
+			}
+		}
+		for( boolean[] row:matrixPropertiesModel){
+			for(boolean b2:row){
+				if(b2){
+					sumMat+=1;
+				}
+				totalMat+=1;
+			}
+		}
+		double proportionVec = (double)(sumVec)/(double)(total);
+		double proportionMat = (double)(sumMat)/(double)(totalMat);
+		System.out.println(possibility);		
+		System.out.println("proportion of true in answer vector "+proportionVec);
+		System.out.println("proportion of true in matrice "+proportionMat);		
+	}
+	
+	private void printUniqueRuleMatrix(boolean[][] matrix, Integer i) {
+		int sumMat = 0;
+		int totalMat=0;
+		for( boolean[] row:matrix){
+			for(boolean b2:row){
+				if(b2){
+					sumMat+=1;
+				}
+				totalMat+=1;
+			}
+		}
+		double proportionMat = (double)(sumMat)/(double)(totalMat);
+		System.out.println(possibility);		
+		System.out.println("proportion of true in Rule matrice "+i+" is "+proportionMat);	
+		
 	}
 
 	public ArrayList<boolean[]> getListAnswersToPbmVector() {

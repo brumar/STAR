@@ -58,6 +58,7 @@ public class ModelEvaluator {
 	}
 
 	public double evaluateProtocol(Protocol pro) {
+		printSumCompat();
 		Iterator<String> it = pro.getProbAnswerMap().keySet().iterator();
 		double descriptionLength=0;
 		while(it.hasNext()){
@@ -68,6 +69,14 @@ public class ModelEvaluator {
 			descriptionLength+=evaluate(indexPbm,indexAnswer); // WHAAAAAAAAAT
 		}
 		return descriptionLength;
+	}
+
+	private void printSumCompat() {
+		int sum=0;
+		for (Integer c:CompatibilitiesNumber){
+			sum+=c;
+		}
+		System.out.println(sum);
 	}
 
 	private double evaluate(int indexPbm,int indexAnswer) {
@@ -84,7 +93,6 @@ public class ModelEvaluator {
 			else{
 				localdescriptionLength=costProfileIndication(comp,maxComp,false)+Math.log(maxComp-comp);
 			}
-		
 		}
 	
 		return localdescriptionLength;
