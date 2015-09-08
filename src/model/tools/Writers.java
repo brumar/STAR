@@ -62,7 +62,6 @@ public class Writers {
 			writer = new PrintWriter(filedest, "UTF-8");
 			for(String m:messages){
 				writer.println(m);
-				writer.println(m);
 			}
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -73,8 +72,9 @@ public class Writers {
 		}
 		writer.close();		
 	}
-	public static void createTextFileWithNumbers(ArrayList<Double> permutationValues, String fileDest) {
+	public static void createTextFileWithNumbers(ArrayList<Double> permutationValues, String header, String fileDest) {
 		ArrayList<String> messages = new ArrayList<String>();
+		messages.add(header);
 		for(Double p:permutationValues){
 			messages.add(Double.toString(p));
 		}

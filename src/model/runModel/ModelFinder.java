@@ -33,8 +33,8 @@ public class ModelFinder {
 	double ParametersdescriptionLength;
 	private ArrayList<String> messages=new ArrayList<String>() ;
 	private PickFromWeightedItems randomSelector;
-	private ArrayList<Double> permutationValues= new ArrayList<Double>();
 	boolean error=false;
+	private ProtocolsPermutations pPerm;
 
 
 
@@ -50,10 +50,9 @@ public class ModelFinder {
 	public void run() throws Exception {
 
 		precomputation();
-		preparePermutationTest();
-		evaluation(protocols);}
-
-
+		computeGlobalPermutationValues();
+		evaluation(protocols);
+		}
 
 	private void precomputation() {
 		modellist=new ModelLister(matrixGrid);
@@ -78,7 +77,7 @@ public class ModelFinder {
 			}
 		}
 		for (EvaluationOutput ev:outputs){
-			messages.add(ev.writeMessage());
+			messages.add(ev.writeCsvMessage());
 		}
 	}
 
@@ -108,8 +107,11 @@ public class ModelFinder {
 			}
 		}
 		if(action=="compareWithPermutationValues"){
-			double p = this.getPvalue(permutationValues, output.getCompression(), 0, permutationValues.size());
+			double p = pPerm.getPvalue(pro, output.getCompression()) ;
 			output.setPermutationPvalue(p);
+			String StringRep = pPerm.getStringRepresentationProtocol(pro);
+			output.setStringPbmRep(StringRep);
+
 		}
 		return output;
 	}
@@ -121,36 +123,27 @@ public class ModelFinder {
 	public boolean isError() {
 		return error;
 	}
-
-	private void preparePermutationTest() {
-		randomSelector=new PickFromWeightedItems(problemDatas.getOccurenceMatrix());
-		int nperm = Integer.parseInt(Resource.messages.getString("Npermutations"));
-		for (int i = 0; i < nperm; i++){
-			HashMap<String, String> selection = randomSelector.PickFromWeightedMatrice();
-			Protocol p=new Protocol(i,selection);
-			EvaluationOutput output = singleEvaluation(p,"storePermutationValues");
-			if(!output.writeMessage().equals("error")){
-				this.permutationValues.add(output.getCompression());
+	
+	private void computeGlobalPermutationValues() {
+		pPerm=new ProtocolsPermutations(problemDatas);
+		fullPermutationTest();
+	}
+	private void fullPermutationTest() {
+		for(Protocol p:protocols){
+			if(!pPerm.alreadyStoredThisKindOfProtocol(p)){
+				System.out.println("establishing permutation values for a new protocol");
+				ArrayList<Protocol> rProt = pPerm.getRandomProtocols(p);
+				ArrayList<Double> permutationValues= new ArrayList<Double>();
+				for (Protocol p2:rProt){
+					EvaluationOutput output = singleEvaluation(p2,"storePermutationValues");
+					permutationValues.add(output.getCompression());
+				}	
+				pPerm.storeFullPermValues(p,permutationValues);
 			}
-			
-		}
-		Collections.sort(permutationValues);
-		if(Resource.messages.getString("storePermutationValues").equals("yes")){
-			String fileDest = Resource.messages.getString("outputPermutationValues");
-			Writers.createTextFileWithNumbers(permutationValues, fileDest);
 		}
 	}
 	
-	public double getPvalue( ArrayList<Double> permutationValues,double i, Integer low,Integer high){
-	    if (high-low<2){
-	        return (double)high/(double)permutationValues.size();
-	    }
-	    int mid = low + ((high - low) >> 1);
-	    if (permutationValues.get(mid) > i)
-	        return getPvalue(permutationValues, i, low, mid - 1);
-	    else
-	        return getPvalue(permutationValues, i, mid + 1, high);
-	}
+
 
 
 }

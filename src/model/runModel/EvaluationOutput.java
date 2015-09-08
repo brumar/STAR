@@ -17,6 +17,7 @@ public class EvaluationOutput {
 	private DoubleHashMap indexRule;
 	private String defaultMessage;
 	private double pvalue;
+	private String pbmRep;
 
 	
 	public EvaluationOutput(ArrayList<Integer> possList, Protocol pro, double modeldescriptionLength,
@@ -27,6 +28,7 @@ public class EvaluationOutput {
 		this.withoutModeldescriptionLength=withoutModeldescriptionLength;
 		this.indexRule=indexRule;
 		this.defaultMessage="ok";
+		this.pbmRep="";
 
 		/*
 		 * 
@@ -65,6 +67,28 @@ coefficientNormalisation=2
 	public void setPermutationPvalue(double p) {
 		this.pvalue=p;
 		
+	}
+
+	public String writeCsvMessage() {
+		if(this.defaultMessage.equals("error")){
+			return "error";
+		}
+		String mess="Subject";
+		mess+=pro.getIdSubjectSession()+";";
+		mess+=Math.floor(modeldescriptionLength*100)/100+";";
+		mess+=Math.floor(withoutModeldescriptionLength*100)/100+";";
+		mess+=pvalue+";";
+		Iterator<Integer> it = possList.iterator();
+		while(it.hasNext()){
+			mess+=indexRule.find(it.next()+1)+",";
+		}
+		mess+=";";
+		mess+=pbmRep;
+		return mess;
+	}
+
+	public void setStringPbmRep(String stringRep) {
+		pbmRep=stringRep;
 	}
 
 }
