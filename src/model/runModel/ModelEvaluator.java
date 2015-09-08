@@ -83,15 +83,15 @@ public class ModelEvaluator {
 		double localdescriptionLength=0;
 		double maxComp = (double)CompatibilitiesMaxNumber[indexPbm];
 		if(SpecialNotification[indexPbm].equals("FULL")||SpecialNotification[indexPbm].equals("VOID")){
-			localdescriptionLength = Math.log(maxComp);
+			localdescriptionLength = mylog(maxComp);
 		}
 		else{
 			double comp = (double)CompatibilitiesNumber[indexPbm];
 			if(ListofVector.get(indexPbm)[indexAnswer]){
-				localdescriptionLength=costProfileIndication(comp,maxComp,true)+Math.log(comp);
+				localdescriptionLength=costProfileIndication(comp,maxComp,true)+mylog(comp);
 			}
 			else{
-				localdescriptionLength=costProfileIndication(comp,maxComp,false)+Math.log(maxComp-comp);
+				localdescriptionLength=costProfileIndication(comp,maxComp,false)+mylog(maxComp-comp);
 			}
 		}
 	
@@ -105,10 +105,10 @@ public class ModelEvaluator {
 		double pfail = (maxComp-comp)/(maxComp*(normalizeCoeff));
 		double psuccess = 1-pfail;
 		if(success){
-			return(Math.log(1/psuccess));
+			return(mylog(1/psuccess));
 		}
 		else{
-			return(Math.log(1/pfail));
+			return(mylog(1/pfail));
 		}
 	}
 
@@ -118,9 +118,12 @@ public class ModelEvaluator {
 		while(it.hasNext()){
 			String ProblemId = it.next();
 			int indexPbm=problemIdToIndex.get(ProblemId);
-			description+=Math.log((double)CompatibilitiesMaxNumber[indexPbm]);
+			description+=mylog((double)CompatibilitiesMaxNumber[indexPbm]);
 		}
 		return description;
+	}
+	public double mylog(Double l){
+		return Math.log(l)/Math.log(2);
 	}
 
 }

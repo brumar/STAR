@@ -72,7 +72,7 @@ public class ModelLister {
 
 	public double ParamdescriptionLength() {
 		// TODO Auto-generated method stub
-		return Math.log(compatiblesRulesSets.size());
+		return Math.log(compatiblesRulesSets.size())/Math.log(2);
 	}
 
 }
