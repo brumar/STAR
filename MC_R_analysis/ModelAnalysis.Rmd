@@ -1,0 +1,55 @@
+---
+title: "STAR_analysis"
+output: html_document
+---
+Analysis of diagnostic programm performances
+========================================================
+
+## Prelim.
+
+### Read datas
+```{r}
+index=index+1
+datas=read.csv2(fileString,sep=";",colClasses=c("factor","numeric","numeric","numeric","factor","factor"))
+#Subject;modelSize;noModelSize;pval;diagnostic;problems
+```
+### Complete datas
+```{r}
+ruleList=c("conceptualAbility_Level0","conceptualAbility_Level1","conceptualAbility_Level2","conceptualAbility_Level3","noReuseNumbers","keyword","allnumbers","reinterpretation")
+for (rule in ruleList){
+  datas[rule]=unlist(lapply(datas$diagnostic, function(x) grepl(rule,x)))
+}
+
+```
+### summary of datas
+```{r}
+datas$compression=datas$noModelSize-datas$modelSize
+output[,index]=datas$compression
+head(datas)
+summary(datas)
+```
+## P-values   
+### Répartition   
+```{r}
+hist(datas$pval,xlab = "p-values", ylab="fréquence")
+mean(datas$pval)
+```
+
+### Fisher method to compute overall p-value   
+
+```{r}
+df = 2*length(length(datas$pval))
+pchisq( -2*sum(log(datas$pval)), df, lower.tail=FALSE)
+```
+## Diagnostics   
+### compression   
+```{r}
+hist(datas$compression,xlab = "compression en bits", ylab="fréquence")
+mean(datas$compression)
+```
+### Rules in the diagnostic   
+```{r}
+apply(datas[ruleList], 2, sum)
+```
+
+

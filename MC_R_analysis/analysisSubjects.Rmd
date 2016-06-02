@@ -1,0 +1,33 @@
+---
+title: "STAR_analysis"
+output: html_document
+---
+Analysis of diagnostic programm performances
+========================================================
+```{r}
+output=matrix(, nrow = 46, ncol = 2)
+index=0
+```
+# Modèle 1 : KRC
+
+```{r}
+fileString="./dat/08092015/out.txt"
+name="KRC"
+```
+
+```{r child='ModelAnalysis.Rmd'}
+```
+
+# Modèle 2 : C only
+
+```{r}
+fileString="./dat/09092015/out.txt"
+name="K"
+```
+
+```{r child='ModelAnalysis.Rmd'}
+```
+
+```{r}
+wilcox.test(output[,1],output[,2], paired=TRUE) 
+```
