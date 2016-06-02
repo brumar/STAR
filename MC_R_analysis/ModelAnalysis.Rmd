@@ -38,7 +38,7 @@ mean(datas$pval)
 ### Fisher method to compute overall p-value   
 
 ```{r}
-df = 2*length(length(datas$pval))
+df = 2*(length(datas$pval))
 pchisq( -2*sum(log(datas$pval)), df, lower.tail=FALSE)
 ```
 ## Diagnostics   
