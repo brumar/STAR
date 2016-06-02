@@ -1,0 +1,22 @@
+#comment
+#Sat Sep 05 19:18:39 CEST 2015
+19=n2_utilise
+18=verbal_accord_reinterp
+17=mots_cles_accord
+16=pas_de_reponse
+15=bonne_reponse
+14=ABS_OF_n2_utilise
+13=ABS_OF_bonne_reponse
+12=reinterpretation_possible
+11=ABS_OF_ininterpretable
+10=ABS_OF_n1_utilise
+9=verbal_accord_question
+8=ABS_OF_verbal_accord_question
+7=ABS_OF_mots_cles_accord
+6=ABS_OF_pas_de_reponse
+5=ABS_OF_verbal_accord_reinterp
+4=ininterpretable
+3=presence_verbal
+2=ABS_OF_presence_verbal
+1=ABS_OF_reinterpretation_possible
+0=n1_utilise
