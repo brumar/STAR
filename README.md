@@ -1,3 +1,5 @@
+[![DOI](https://zenodo.org/badge/doi/10.5281/zenodo.55238.svg)](http://dx.doi.org/10.5281/zenodo.55238)
+
 # Introduction  
 This repository presents a software built in order to use cognitive determinist models in a context of learning environements. The software is named STAR for Simple Toolbox to Analyse Reasoning. This repository may be hard to understand without related publications. The part of my PhD thesis related to this tool have been written but only in french for the moment. 
 
